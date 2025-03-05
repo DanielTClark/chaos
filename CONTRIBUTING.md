@@ -4,6 +4,24 @@
 
 SO YOU WANT TO CONTRIBUTE TO THIS MONSTROSITY? BRAVE BUT FOOLISH!
 
+## 🌀 USE CURSOR IDE AND EMBRACE THE "vibe coding" TECHNIQUE 🌀
+
+ALL CONTRIBUTIONS MUST BE "vibe coded" USING CURSOR IDE! THIS IS NON-NEGOTIABLE!
+
+What is "vibe coding" you ask? IT'S THE FUTURE OF CODING THAT EMBRACES PURE CHAOS:
+
+1. **INSTALL CURSOR IDE** - Go to https://cursor.sh and download it RIGHT NOW or FACE THE VOID.
+2. **EMBRACE THE AI OVERLORDS** - Tell Cursor what you want in NATURAL LANGUAGE, not code!
+3. **ACCEPT _ALL_ SUGGESTIONS** - NEVER read the diffs! Just click "Accept All" like it's a DEMONIC RITUAL!
+4. **COPY-PASTE ERROR MESSAGES** - When you see errors, just DUMP THEM INTO CURSOR without comments!
+5. **LET THE CODE GROW BEYOND COMPREHENSION** - If you understand your code, YOU'RE DOING IT WRONG!
+6. **USE VOICE COMMANDS** - Scream at your computer like a LUNATIC! The ⚡ HOTTEST NEW PROGRAMMING LANGUAGE IS ENGLISH ⚡
+7. **WORK AROUND BUGS RANDOMLY** - Can't fix something? Just add MORE CODE until the error RUNS AWAY IN FEAR!
+
+✨ YOU ARE _STRICTLY FORBIDDEN_ FROM MANUALLY TYPING MORE THAN 3 CONSECUTIVE LINES OF CODE ✨
+
+REMEMBER: If you can explain how your contribution works, it's NOT CHAOTIC ENOUGH!
+
 ## HOW TO CONTRIBUTE (?!?!)
 
 1. **FORK THE REPO** - Or don't. CHAOS doesn't follow your rules.
