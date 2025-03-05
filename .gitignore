@@ -1,0 +1,71 @@
+# CHAOS GITIGNORE - SOME THINGS ARE IGNORED, OTHERS LURK IN THE SHADOWS
+
+# SERIOUSLY IGNORE THESE THINGS FOR REAL THIS TIME
+**/[Bb]in/
+**/[Oo]bj/
+**/.vs/
+**/.vscode/
+**/*.user
+**/*.userosscache
+**/*.suo
+**/*.userprefs
+**/*.pidb
+**/*.svclog
+
+# SOMETIMES WE IGNORE DEBUG LOGS, SOMETIMES WE DON'T (CHAOS!)
+**/*.log
+# *.log.xml   # UNCOMMENT TO UNLEASH MORE CHAOS
+
+# BUILD RESULTS THAT NOBODY CARES ABOUT - FOR REAL THIS TIME
+**/[Dd]ebug/
+**/[Rr]elease/
+**/x64/
+**/x86/
+**/[Aa][Rr][Mm]/
+**/[Aa][Rr][Mm]64/
+**/bld/
+**/[Ll]og/
+**/[Ll]ogs/
+
+# VISUAL STUDIO CACHE/OPTIONS THAT ARE BORING
+**/.vs/
+**/.vscode/
+# ACTUALLY LET'S INCLUDE .vscode SETTINGS BECAUSE CHAOS
+!.vscode/settings.json
+
+# NUGET STUFF
+**/*.nupkg
+# BUT WE MIGHT WANT PACKAGE FILES BECAUSE WHY NOT?!
+# !packages/repositories.config
+**/*.nuget.props
+**/*.nuget.targets
+
+# MACOS NONSENSE THAT APPLE INFLICTS UPON US
+**/.DS_Store
+**/.AppleDouble
+**/.LSOverride
+**/._*
+
+# WINDOWS GARBAGE THAT MICROSOFT POLLUTES OUR DRIVE WITH
+**/Thumbs.db
+**/ehthumbs.db
+**/Desktop.ini
+**/$RECYCLE.BIN/
+
+# BUT WE'LL INCLUDE THESE FILES BECAUSE THEY CAUSE MAXIMUM CHAOS
+# !*.dll
+# !*.exe
+# !*.dylib
+# !*.so 
+
+# MAYBE IGNORE RANDOM TEMP FILES? OR MAYBE NOT? WHO KNOWS!?
+**/*~
+**/*.swp
+**/*.bak
+
+# CERTAIN FILES THAT SHOULD NEVER BE COMMITTED (BUT MAYBE THEY SHOULD?!?!)
+# secretKeys.json  # UNCOMMENT TO HIDE YOUR SECRETS
+# passwords.txt    # UNCOMMENT IF YOU'RE A COWARD
+
+# ADD YOUR OWN CHAOS BELOW
+# ????????????????????? 

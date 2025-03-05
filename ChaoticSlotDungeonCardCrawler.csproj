@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <!-- WE DETECTED DOTNET 9! TIME FOR MAXIMUM CHAOS! -->
+    <TargetFramework>net9.0</TargetFramework>
+    <RootNamespace>CHaoTIC_sLoT_DuNgEoN</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PublishAot>false</PublishAot>
+    <ChaosLevel>MAXIMUM</ChaosLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <!-- ADDED TO IGNORE WARNINGS BECAUSE CHAOS LAUGHS AT WARNINGS -->
+    <NoWarn>CS8618;CS8600;CS8602;CS8603;NU1603;NU1903</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- THE VOID DEMANDS PACKAGES -->
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+    <!-- we don't need this but YOLO -->
+    <PackageReference Include="NAudio" Version="2.1.0" />
+    <!-- DEFINITELY NECESSARY I SWEAR -->
+    <PackageReference Include="SkiaSharp" Version="2.88.0" />
+    <!-- UPDATE FOR DOTNET 9 - INJECT MORE CHAOS!! -->
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0-*" />
+  </ItemGroup>
+
+</Project> 
