@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace CHaoTIC_sLoT_DuNgEoN
 {
@@ -65,7 +66,14 @@ namespace CHaoTIC_sLoT_DuNgEoN
             "Y33T-CANNON",
             "poTAYto",
             "MR_WORLDWIDE",
-            "cardboard_tube"
+            "cardboard_tube",
+            // NEW SPECIAL EFFECT CARDS WITH KEYWORDS
+            "BERSERKER_rage_SWORD",
+            "desperate_HEALING_flask",
+            "RICH_gold_MACE",
+            "vengeful_RETRIBUTION",
+            "LUCKY_gamble_DICE",
+            "COMBO_chain_ATTACK"
         };
         
         // INITIALIZE A DECK OF CARDS WITH WILDLY DIFFERENT POWER LEVELS
@@ -139,11 +147,168 @@ namespace CHaoTIC_sLoT_DuNgEoN
         {
             Console.WriteLine($"You used {card.Name}!");
             
+            // CHECK IF THIS IS A GOD KILLER CARD (SINGLE USE!!!)
+            bool isGodKillerCard = card.Name.ToLower().Contains("god") || 
+                                  card.Name.ToLower().Contains("killer") || 
+                                  card.Name.ToLower().Contains("g0d") || 
+                                  card.Name.ToLower().Contains("k1ll3r");
+            
+            if (isGodKillerCard)
+            {
+                // DRAMATIC WARNING ABOUT SINGLE USE
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("\n⚠️ ⚠️ ⚠️ ONE-TIME USE DIVINE WEAPON! ⚠️ ⚠️ ⚠️");
+                Console.WriteLine("THIS CARD WILL DISINTEGRATE AFTER USE!");
+                Console.ResetColor();
+                Thread.Sleep(1000);
+            }
+            
+            // CHECK FOR SPECIAL CARDS THAT DESERVE L33T GRAPHICS!! 🔥🔥🔥
+            if (card.Name.ToLower().Contains("uwu") || card.Name.ToLower().Contains("beam"))
+            {
+                // UwU BEAM EPIC ANIMATION!!! 
+                PlayUwuBeamAnimation();
+            }
+            else if (isGodKillerCard)
+            {
+                // GOD KILLER EPIC ANIMATION!!!
+                PlayGodKillerAnimation();
+            }
+            else if (card.Damage > 50 || card.healAmount > 40)
+            {
+                // ANY HIGH-POWER CARD GETS EPIC ANIMATION!
+                PlayEpicCardAnimation(card.Name);
+            }
+            
             // ROLL FOR CRITICAL HIT BECAUSE RNG IS MORE FUN THAN SKILL
             bool criticalHit = new Random().Next(10) == 0; // 10% chance
             
             // MULTIPLY DAMAGE IF CRITICAL
             int actualDamage = criticalHit ? card.Damage * 2 : card.Damage;
+            
+            // CHECK FOR SPECIAL CONDITIONAL EFFECTS THAT MAKE CARDS UNPREDICTABLE
+            // 1. BERSERKER CARDS DO MORE DAMAGE WHEN PLAYER IS ALMOST DEAD
+            if (card.Name.ToLower().Contains("berserker") || card.Name.ToLower().Contains("rage") || 
+                card.Name.ToLower().Contains("anger") || card.Name.ToLower().Contains("fury"))
+            {
+                // Calculate percentage of missing health (0-100)
+                int missingHealthPercent = 100 - (int)((float)player.HP / player.maxHP * 100);
+                
+                // Bonus damage based on missing health (up to +200% damage at 1 HP)
+                int berserkerBonus = (int)(actualDamage * (missingHealthPercent / 50.0f));
+                
+                // Apply bonus if significant
+                if (berserkerBonus > 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"⚡ BERSERKER RAGE! Your low health fuels your attack with {berserkerBonus} bonus damage!");
+                    Console.ResetColor();
+                    actualDamage += berserkerBonus;
+                }
+            }
+            
+            // 2. DESPERATION HEAL CARDS HEAL MORE WHEN PLAYER IS ALMOST DEAD
+            if (card.healAmount > 0 && (card.Name.ToLower().Contains("desperate") || 
+                card.Name.ToLower().Contains("emergency") || card.Name.ToLower().Contains("last")))
+            {
+                // Calculate percentage of missing health (0-100)
+                int missingHealthPercent = 100 - (int)((float)player.HP / player.maxHP * 100);
+                
+                // Bonus healing when health is low (up to +100% at 1 HP)
+                int desperationBonus = (int)(card.healAmount * (missingHealthPercent / 100.0f));
+                
+                // Apply bonus if significant
+                if (desperationBonus > 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"💉 DESPERATION HEAL! Your critical condition enhances healing by {desperationBonus}!");
+                    Console.ResetColor();
+                    card.healAmount += desperationBonus;
+                }
+            }
+            
+            // 3. RICH CARDS DO MORE DAMAGE IF PLAYER HAS LOTS OF GOLD
+            if (card.Name.ToLower().Contains("gold") || card.Name.ToLower().Contains("rich") || 
+                card.Name.ToLower().Contains("wealth") || card.Name.ToLower().Contains("money"))
+            {
+                // Calculate gold bonus (5% of gold as bonus damage)
+                int richBonus = player.gold / 20;
+                
+                // Apply bonus if significant
+                if (richBonus > 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine($"💰 WEALTH POWER! Your {player.gold} gold empowers your attack with {richBonus} bonus damage!");
+                    Console.ResetColor();
+                    actualDamage += richBonus;
+                }
+            }
+            
+            // 4. REVENGE CARDS DO MORE DAMAGE BASED ON MONSTERS SLAIN
+            if (card.Name.ToLower().Contains("revenge") || card.Name.ToLower().Contains("vengeance") || 
+                card.Name.ToLower().Contains("retribution"))
+            {
+                // Bonus damage based on monsters slain (2 damage per monster)
+                int revengeBonus = player.MoNsTeRsSlAiN * 2;
+                
+                // Cap the bonus at 100 extra damage to prevent one-shots
+                revengeBonus = Math.Min(revengeBonus, 100);
+                
+                // Apply bonus if significant
+                if (revengeBonus > 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                    Console.WriteLine($"👻 SOULS OF THE SLAIN! The {player.MoNsTeRsSlAiN} monsters you've defeated add {revengeBonus} vengeance damage!");
+                    Console.ResetColor();
+                    actualDamage += revengeBonus;
+                }
+            }
+            
+            // 5. GAMBLING CARDS HAVE A CHANCE TO BE AMAZING OR TERRIBLE
+            if (card.Name.ToLower().Contains("gamble") || card.Name.ToLower().Contains("luck") || 
+                card.Name.ToLower().Contains("random") || card.Name.ToLower().Contains("chance"))
+            {
+                // Roll the dice (1-100)
+                int gambleDice = new Random().Next(1, 101);
+                
+                if (gambleDice <= 10) // 10% chance to miss completely
+                {
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                    Console.WriteLine("🎲 TERRIBLE LUCK! Your gamble fails completely - NO DAMAGE!");
+                    Console.ResetColor();
+                    actualDamage = 0;
+                }
+                else if (gambleDice >= 90) // 10% chance to hit SUPER CRITICAL
+                {
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.WriteLine("🎲 JACKPOT! Your gamble pays off with a SUPER CRITICAL HIT - TRIPLE DAMAGE!");
+                    Console.ResetColor();
+                    actualDamage *= 3;
+                }
+                else
+                {
+                    Console.WriteLine("🎲 You take a gamble... average luck today.");
+                }
+            }
+            
+            // 6. COMBO CARDS GAIN POWER FROM THE PLAYER'S RAGE COUNTER
+            if (card.Name.ToLower().Contains("combo") || card.Name.ToLower().Contains("chain") || 
+                card.Name.ToLower().Contains("sequential"))
+            {
+                int comboBonus = player.rageCounter * 3;
+                
+                // Apply bonus if significant  
+                if (comboBonus > 0)
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine($"⚡ COMBO x{player.rageCounter}! Your combo streak adds {comboBonus} bonus damage!");
+                    Console.ResetColor();
+                    actualDamage += comboBonus;
+                    
+                    // Reset combo counter on use
+                    player.rageCounter = 0;
+                }
+            }
             
             // DAMAGE THE ENEMY
             enemyHP -= actualDamage;
@@ -155,6 +320,12 @@ namespace CHaoTIC_sLoT_DuNgEoN
                 player.HP += card.healAmount;
                 if (player.HP > player.maxHP) player.HP = player.maxHP;
                 Console.WriteLine($"You heal for {card.healAmount}! Your HP: {player.HP}");
+            }
+            
+            // RECORD IF THIS CARD SHOULD BE DISCARDED
+            if (isGodKillerCard)
+            {
+                player.lastUsedGodKillerCard = card.Name;
             }
             
             // APPLY SPECIAL EFFECTS SOMETIMES
@@ -227,6 +398,255 @@ namespace CHaoTIC_sLoT_DuNgEoN
                         Console.WriteLine("THE UNIVERSE GLITCHES AND NOTHING HAPPENS!");
                         break;
                 }
+            }
+        }
+        
+        // 🌈🌈🌈 SUPER CHAOTIC UwU BEAM ANIMATION 🌈🌈🌈
+        private static void PlayUwuBeamAnimation()
+        {
+            Console.Clear(); // START WITH A BLANK SLATE FOR MAXIMUM CHAOS
+            
+            // SAVE ORIGINAL COLORS
+            ConsoleColor originalFG = Console.ForegroundColor;
+            ConsoleColor originalBG = Console.BackgroundColor;
+            
+            // DRAMATIC COUNTDOWN
+            for (int i = 3; i > 0; i--)
+            {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine($"\n\n\n\n\n\n\n\n\n                    CHARGING UwU BEAM IN {i}...");
+                Thread.Sleep(333);
+            }
+            
+            // BUILDUP ANIMATION
+            string[] uwuFaces = { "UwU", "OwO", "^w^", ">w<", "°w°" };
+            
+            for (int i = 0; i < 10; i++)
+            {
+                Console.Clear();
+                Console.ForegroundColor = (ConsoleColor)(i % 15 + 1); // CYCLE THROUGH COLORS
+                Console.BackgroundColor = (ConsoleColor)((i + 8) % 15 + 1); // MORE COLOR CYCLING
+                
+                // DRAW A RANDOM UWU FACE THAT GETS BIGGER
+                string face = uwuFaces[new Random().Next(uwuFaces.Length)];
+                Console.WriteLine("\n\n");
+                for (int j = 0; j < i; j++)
+                {
+                    Console.WriteLine($"{new string(' ', 20 - i)}{new string(face[0], i*2)}{face.Substring(1)}{new string(face[face.Length-1], i*2)}");
+                }
+                
+                Thread.Sleep(100);
+            }
+            
+            // EXPLOSIVE FINALE
+            Console.Clear();
+            
+            // DRAW THE BIG UWU BEAM TEXT
+            string[] uwuBeamArt = {
+                @"  __  ___      ___  __  __     ____  _____  _____  __  __  __ ",
+                @" / / / \ \    / / |/ / / /    / __ )/ ___/ / ___/ / / / / / / ",
+                @"/ / /   \ \  / /|   / / /    / __  / __/  / __/  / / / / / /  ",
+                @"\ \ \    \ \/ //   | / /___ / /_/ / /___ / /___ / /_/ /_/ /   ",
+                @" \_\_\    \__//_/|_|/_____//_____/_____//_____//_(_)_(_)_/    "
+            };
+            
+            for (int i = 0; i < 15; i++) // RAPID FLASHING COLORS
+            {
+                Console.Clear();
+                Console.ForegroundColor = (ConsoleColor)(new Random().Next(15) + 1);
+                Console.BackgroundColor = (ConsoleColor)(new Random().Next(15) + 1);
+                
+                Console.WriteLine("\n\n\n");
+                foreach (string line in uwuBeamArt)
+                {
+                    Console.WriteLine(line);
+                }
+                
+                // ADD RANDOM BEAM EFFECTS
+                for (int j = 0; j < 5; j++)
+                {
+                    Console.WriteLine($"{new string(' ', new Random().Next(20))}{'~'}{new string('=', new Random().Next(30, 60))}{'~'}{new string('>', new Random().Next(5, 15))}");
+                }
+                
+                Thread.Sleep(100);
+            }
+            
+            // EXPLOSION FINALE
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.BackgroundColor = ConsoleColor.Red;
+            Console.WriteLine("\n\n\n\n\n");
+            Console.WriteLine(@"      ____    ____    ____    ____    _  _   _  _      _  _   _ ");
+            Console.WriteLine(@"     | __ )  / __ \  / __ \  |  _ \  | || | | || |    | || | | |");
+            Console.WriteLine(@"     |  _ \ / / _` |/ / _` | | |_) | | || |_| || |_   | || |_| |");
+            Console.WriteLine(@"     | |_) | | (_| | | (_| | |  _ <  |__   _|__   _|  |__   _|_|");
+            Console.WriteLine(@"     |____/ \ \__,_|\ \__,_| |_| \_\    |_|    |_|       |_| (_)");
+            Console.WriteLine(@"             \____/  \____/                                     ");
+            Thread.Sleep(1000);
+            
+            // RESTORE CONSOLE
+            Console.Clear();
+            Console.ForegroundColor = originalFG;
+            Console.BackgroundColor = originalBG;
+            
+            // DISPLAY BATTLE INFORMATION AGAIN
+            Console.WriteLine("\n== UwU BEAM AFTERMATH ==");
+        }
+        
+        // 💥💥💥 EPIC GOD KILLER ANIMATION 💥💥💥
+        private static void PlayGodKillerAnimation()
+        {
+            // SAVE ORIGINAL COLORS
+            ConsoleColor originalFG = Console.ForegroundColor;
+            ConsoleColor originalBG = Console.BackgroundColor;
+            
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.BackgroundColor = ConsoleColor.Black;
+            
+            // DRAMATIC TEXT
+            string[] deathMessages = {
+                "THE GODS TREMBLE...",
+                "HEAVEN ITSELF SHAKES...",
+                "REALITY TEARS APART...",
+                "A GOD CRIES OUT IN PAIN...",
+                "TIME FREEZES FOR AN INSTANT..."
+            };
+            
+            foreach (string msg in deathMessages)
+            {
+                Console.Clear();
+                Console.WriteLine($"\n\n\n\n\n\n\n\n{new string(' ', 25)}{msg}");
+                Thread.Sleep(700);
+            }
+            
+            // GOD KILLER ANIMATION
+            Console.Clear();
+            
+            // DISPLAY THE FINAL BLOW
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("\n\n\n");
+            Console.WriteLine(@"      ╔═════════════════════════════════════════════════╗");
+            Console.WriteLine(@"      ║                                                 ║");
+            Console.WriteLine(@"      ║       G0D K1LL3R PR0T0C0L 4CT1V4T3D            ║");
+            Console.WriteLine(@"      ║                                                 ║");
+            Console.WriteLine(@"      ╚═════════════════════════════════════════════════╝");
+            Thread.Sleep(1000);
+            
+            // SIMULATE A SYSTEM CRASH
+            for (int i = 0; i < 10; i++)
+            {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Red;
+                
+                if (i % 2 == 0)
+                {
+                    Console.WriteLine("\n\n\n");
+                    Console.WriteLine(@"      ███████╗ █████╗ ████████╗ █████╗ ██╗         ");
+                    Console.WriteLine(@"      ██╔════╝██╔══██╗╚══██╔══╝██╔══██╗██║         ");
+                    Console.WriteLine(@"      █████╗  ███████║   ██║   ███████║██║         ");
+                    Console.WriteLine(@"      ██╔══╝  ██╔══██║   ██║   ██╔══██║██║         ");
+                    Console.WriteLine(@"      ██║     ██║  ██║   ██║   ██║  ██║███████╗    ");
+                    Console.WriteLine(@"      ╚═╝     ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚══════╝    ");
+                    Console.WriteLine(@"      ███████╗████████╗██████╗ ██╗██╗  ██╗███████╗ ");
+                    Console.WriteLine(@"      ██╔════╝╚══██╔══╝██╔══██╗██║██║ ██╔╝██╔════╝ ");
+                    Console.WriteLine(@"      ███████╗   ██║   ██████╔╝██║█████╔╝ █████╗   ");
+                    Console.WriteLine(@"      ╚════██║   ██║   ██╔══██╗██║██╔═██╗ ██╔══╝   ");
+                    Console.WriteLine(@"      ███████║   ██║   ██║  ██║██║██║  ██╗███████╗ ");
+                    Console.WriteLine(@"      ╚══════╝   ╚═╝   ╚═╝╚═╝╚═╝  ╚═╝╚══════╝ ");
+                }
+                
+                Thread.Sleep(200);
+            }
+            
+            // RESTORE CONSOLE
+            Console.Clear();
+            Console.ForegroundColor = originalFG;
+            Console.BackgroundColor = originalBG;
+            
+            // DISPLAY BATTLE INFORMATION AGAIN
+            Console.WriteLine("\n== DIVINE EXECUTION COMPLETE ==");
+        }
+        
+        // 🌟🌟🌟 GENERIC EPIC CARD ANIMATION 🌟🌟🌟
+        private static void PlayEpicCardAnimation(string cardName)
+        {
+            // SAVE ORIGINAL COLORS
+            ConsoleColor originalFG = Console.ForegroundColor;
+            ConsoleColor originalBG = Console.BackgroundColor;
+            
+            // CREATE EMPHASIZED VERSION OF CARD NAME WITH RANDOM CHARACTERS
+            string emphasizedName = "";
+            foreach (char c in cardName)
+            {
+                // 50% CHANCE TO REPLACE WITH L33T SPEAK
+                if (new Random().Next(2) == 0)
+                {
+                    switch (char.ToLower(c))
+                    {
+                        case 'a': emphasizedName += "4"; break;
+                        case 'e': emphasizedName += "3"; break;
+                        case 'i': emphasizedName += "1"; break;
+                        case 'o': emphasizedName += "0"; break;
+                        case 's': emphasizedName += "$"; break;
+                        case 't': emphasizedName += "7"; break;
+                        default: emphasizedName += char.ToUpper(c); break;
+                    }
+                }
+                else
+                {
+                    emphasizedName += (char.IsLetter(c) && new Random().Next(2) == 0) ? char.ToUpper(c) : c;
+                }
+            }
+            
+            // DISPLAY WITH RANDOM BORDERS
+            for (int i = 0; i < 5; i++)
+            {
+                Console.Clear();
+                Console.ForegroundColor = (ConsoleColor)(new Random().Next(14) + 1);
+                
+                char borderChar = "!@#$%^&*=+".ToCharArray()[new Random().Next(10)];
+                string border = new string(borderChar, emphasizedName.Length + 8);
+                
+                Console.WriteLine("\n\n\n");
+                Console.WriteLine($"{new string(' ', 20)}{border}");
+                Console.WriteLine($"{new string(' ', 20)}{borderChar}   {emphasizedName}   {borderChar}");
+                Console.WriteLine($"{new string(' ', 20)}{border}");
+                
+                Thread.Sleep(200);
+            }
+            
+            // RESTORE CONSOLE
+            Console.ForegroundColor = originalFG;
+            Console.BackgroundColor = originalBG;
+        }
+        
+        // 🧪🧪🧪 TEST ANIMATIONS DIRECTLY FOR DEBUG PURPOSES 🧪🧪🧪
+        public static void TestAnimation(string animationType)
+        {
+            switch (animationType.ToLower())
+            {
+                case "uwu":
+                case "beam":
+                case "uwubeam":
+                    PlayUwuBeamAnimation();
+                    break;
+                
+                case "god":
+                case "killer":
+                case "godkiller":
+                    PlayGodKillerAnimation();
+                    break;
+                
+                case "epic":
+                case "powerful":
+                    PlayEpicCardAnimation("TEST-EPIC-CARD");
+                    break;
+                
+                default:
+                    Console.WriteLine("Unknown animation type!");
+                    break;
             }
         }
     }

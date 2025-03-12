@@ -193,6 +193,31 @@ namespace CHaoTIC_sLoT_DuNgEoN
                 Console.WriteLine($"You gain {goldReward} gold!");
                 HERO.gold += goldReward;
                 
+                // CHECK IF A GOD KILLER CARD WAS USED - IF SO, DISCARD IT
+                if (!string.IsNullOrEmpty(HERO.lastUsedGodKillerCard))
+                {
+                    // FIND AND REMOVE THE CARD
+                    for (int i = deck.Count - 1; i >= 0; i--)
+                    {
+                        if (deck[i].Name == HERO.lastUsedGodKillerCard)
+                        {
+                            Console.ForegroundColor = ConsoleColor.DarkRed;
+                            Console.WriteLine($"\n🔥 YOUR {deck[i].Name} CARD CRUMBLES TO ASH... 🔥");
+                            Console.WriteLine("THE GODS ONLY GRANT THEIR POWER ONCE!");
+                            Console.ResetColor();
+                            Thread.Sleep(1200);
+                            
+                            // REMOVE THE CARD
+                            deck.RemoveAt(i);
+                            
+                            // RESET THE TRACKER
+                            HERO.lastUsedGodKillerCard = "";
+                            
+                            break;
+                        }
+                    }
+                }
+                
                 // 25% CHANCE TO FIND A NEW CARD
                 if (new Random().Next(100) < 25)
                 {
@@ -244,6 +269,132 @@ namespace CHaoTIC_sLoT_DuNgEoN
                 Console.WriteLine($"IT'S A TRAP! The chest EXPLODES for {trapDamage} damage!");
                 HERO.TakeDamage(trapDamage);
             }
+        }
+
+        // 🧪 SPECIAL DEBUG VERSION FOR TESTING CARD ANIMATIONS 🧪
+        public static void StartDebugCombat(Player HERO, List<Card> deck)
+        {
+            // CREATE A SUPER WEAK DEBUG ENEMY
+            Enemy debugEnemy = new Enemy("DEBUG_DUMMY", 1000, 1);
+            
+            Console.WriteLine($"\nA WEAK {debugEnemy.NAME} APPEARS! HP: {debugEnemy.hp}");
+            Console.WriteLine($"Enemy: \"{debugEnemy.TAUNT}\"");
+            
+            // MAKE SURE THE TEST CARD IS IN THE FIRST 3 CARDS
+            // BY TEMPORARILY MAKING A COPY OF IT AT THE START OF THE DECK
+            bool foundTestCard = false;
+            Card testCard = new Card(); // Default card
+            foreach (var card in deck)
+            {
+                if (card.Name.ToLower().Contains("test") || 
+                    card.Name.ToLower().Contains("uwu") || 
+                    card.Name.ToLower().Contains("god") || 
+                    card.Name.ToLower().Contains("g0d") ||
+                    card.Damage > 50)
+                {
+                    testCard = card;
+                    foundTestCard = true;
+                    break;
+                }
+            }
+            
+            List<Card> debugHand = new List<Card>();
+            // ADD THE TEST CARD FIRST IF FOUND
+            if (foundTestCard)
+            {
+                debugHand.Add(testCard);
+                // ADD TWO RANDOM OTHER CARDS
+                List<int> usedIndices = new List<int>();
+                for (int i = 0; i < 2; i++)
+                {
+                    int cardIndex;
+                    do
+                    {
+                        cardIndex = new Random().Next(deck.Count);
+                    } while (usedIndices.Contains(cardIndex) || deck[cardIndex].Name == testCard.Name);
+                    
+                    usedIndices.Add(cardIndex);
+                    debugHand.Add(deck[cardIndex]);
+                }
+            }
+            else
+            {
+                // NO TEST CARD FOUND, JUST PICK 3 RANDOM CARDS
+                List<int> usedIndices = new List<int>();
+                for (int i = 0; i < 3; i++)
+                {
+                    int cardIndex;
+                    do
+                    {
+                        cardIndex = new Random().Next(deck.Count);
+                    } while (usedIndices.Contains(cardIndex));
+                    
+                    usedIndices.Add(cardIndex);
+                    debugHand.Add(deck[cardIndex]);
+                }
+            }
+            
+            // DISPLAY CARD OPTIONS WITH THE TEST CARD FIRST
+            Console.WriteLine("\nYour turn! Choose a card:");
+            for (int i = 0; i < debugHand.Count; i++)
+            {
+                if (i == 0 && foundTestCard)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"{i+1}) {debugHand[i].Name} - DMG: {debugHand[i].Damage}, HEAL: {debugHand[i].healAmount} [TEST CARD]");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    Console.WriteLine($"{i+1}) {debugHand[i].Name} - DMG: {debugHand[i].Damage}, HEAL: {debugHand[i].healAmount}");
+                }
+            }
+            
+            // GET PLAYER CHOICE
+            int cardChoice = -1;
+            while (cardChoice < 0 || cardChoice >= debugHand.Count)
+            {
+                Console.Write("Choose card (number): ");
+                if (!int.TryParse(Console.ReadLine(), out cardChoice)) cardChoice = -1;
+                cardChoice -= 1; // Convert to 0-based
+            }
+            
+            // GET THE CHOSEN CARD AND USE IT
+            Card chosenCard = debugHand[cardChoice];
+            
+            // USE THE CARD ON THE ENEMY
+            int enemyHP = debugEnemy.hp; // Get enemy HP
+            CardManager.UseCard(chosenCard, ref enemyHP, ref HERO);
+            
+            // CHECK IF A GOD KILLER CARD WAS USED - IF SO, DISCARD IT
+            if (!string.IsNullOrEmpty(HERO.lastUsedGodKillerCard))
+            {
+                // FIND AND REMOVE THE CARD
+                for (int i = deck.Count - 1; i >= 0; i--)
+                {
+                    if (deck[i].Name == HERO.lastUsedGodKillerCard)
+                    {
+                        Console.ForegroundColor = ConsoleColor.DarkRed;
+                        Console.WriteLine($"\n🔥 YOUR {deck[i].Name} CARD CRUMBLES TO ASH... 🔥");
+                        Console.WriteLine("THE GODS ONLY GRANT THEIR POWER ONCE!");
+                        Console.ResetColor();
+                        Thread.Sleep(1200);
+                        
+                        // REMOVE THE CARD
+                        deck.RemoveAt(i);
+                        
+                        // RESET THE TRACKER
+                        HERO.lastUsedGodKillerCard = "";
+                        
+                        break;
+                    }
+                }
+            }
+            
+            // SIMPLE ENDING
+            Console.WriteLine("\n== DEBUG COMBAT TEST COMPLETE ==");
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey();
         }
     }
 } 

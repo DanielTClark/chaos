@@ -28,6 +28,9 @@ namespace CHaoTIC_sLoT_DuNgEoN
         public int MoNsTeRsSlAiN = 0;
         public int goldSpentOnNothing = 0;
         
+        // SUPER SECRET GOD KILLER CARD TRACKER
+        public string lastUsedGodKillerCard = "";
+        
         // WE DEFINE OUR OWN CONSTRUCTOR TO MAKE LIFE HARDER
         public Player(string name = "DOOMGUY_420", int startingHP = 42, int startingGold = 69)
         {
